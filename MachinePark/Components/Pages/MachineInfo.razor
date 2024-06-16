@@ -1,0 +1,101 @@
+﻿@page "/machineinfo/{MachineId:guid}"
+@using Microsoft.AspNetCore.Components.Forms
+@using Resources.Enteties.Models
+@using Resources.Enteties.State
+@using static Resources.Enteties.Models.MachineState
+@using static Resources.Enteties.Models.LeaseState
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject MachineStateService MachineStateService
+
+
+<PageTitle>Machine Info</PageTitle>
+
+@if (Machine == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="container mt-5">
+        @if (EditMode)
+        {
+            <EditForm Model="Machine" OnValidSubmit="HandleValidSubmit"
+                      FormName="EditMachineForm"
+                      OnInvalidSubmit="@HandleInvalidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary></ValidationSummary>
+                <div class="mb-3">
+                    <label for="model" class="form-label"><strong>Model:</strong></label>
+                    <InputText id="model" class="form-control" @bind-Value="@Machine.Model"></InputText>
+                    <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Machine.Model)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="note" class="form-label"><strong>Note:</strong></label>
+                    <InputText id="note" class="form-control" @bind-Value="@Machine.Note"></InputText>
+                    <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Machine.Note)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="acquisition" class="form-label"><strong>Acquisition Date:</strong></label>
+                    <InputDate id="acquisition" class="form-control" @bind-Value="@Machine.AcquisitionDate"></InputDate>
+                </div>
+
+                <div class="mb-3">
+                    <label for="machineStatus" class="form-label"><strong>Machine Status:</strong></label>
+                    <InputSelect id="machineStatus" @bind-Value="@Machine.MachineStatus">
+                        @foreach (var state in Enum.GetValues(typeof(MachineState)))
+                        {
+                            var machineState = (MachineState)state;
+                            <option value="@machineState">@machineState.ToString()</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="mb-3">
+                    <label for="leaseStatus" class="form-label"><strong>Lease Status:</strong></label>
+                    <InputSelect id="leaseStatus" @bind-Value="@Machine.LeaseStatus">
+                        @foreach (var state in Enum.GetValues(typeof(LeaseState)))
+                        {
+                            var leaseState = (LeaseState)state;
+                            <option value="@leaseState">@leaseState.ToString()</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="d-flex justify-content-around" style="gap: 15px;">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+                </div>
+            </EditForm>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><strong>Machine Details</strong></h5>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>ID:</strong> @Machine.MachineId</li>
+                        <li class="list-group-item"><strong>Model:</strong> @Machine.Model</li>
+                        <li class="list-group-item"><strong>Note:</strong> @Machine.Note</li>
+                        <li class="list-group-item"><strong>Acquisition Date:</strong> @Machine.AcquisitionDate.ToShortDateString()</li>
+                        <li class="list-group-item"><strong>Machine Status:</strong> @Machine.MachineStatus</li>
+                        <li class="list-group-item"><strong>Lease Status:</strong> @Machine.LeaseStatus</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3" style="gap: 15px;">
+                @if (NavigationManager.Uri.Contains("machineinfo"))
+                {
+                    <button type="button" class="btn btn-primary" @onclick="NavigateBack">Back</button>
+                }
+                <button type="button" class="btn btn-primary" @onclick="ToggleEditMode">Edit</button>
+            </div>
+            <div class="machine-info-container">
+                <p>Machines: @MachineStateService.TotalMachines  /  Online: @MachineStateService.OnlineMachines</p>
+            </div>
+            }
+    </div>
+}
+

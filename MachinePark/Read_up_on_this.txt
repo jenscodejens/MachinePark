@@ -1,0 +1,70 @@
+﻿Fullständig implementering av Dispose
+-------------------------------------
+
+namespace Resources.Data.Repositories
+{
+    public class MachineRepository : IMachineRepository, IDisposable
+    {
+        private readonly IDbContextFactory<MachineDbContext> _dbFactory;
+        private MachineDbContext _context;
+        private bool disposedValue;
+
+        public MachineRepository(IDbContextFactory<MachineDbContext> dbFactory)
+        {
+            _dbFactory = dbFactory;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Dispose managed state (managed objects).
+                    _context?.Dispose();
+                    _context = null;
+                }
+
+                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // Set large fields to null.
+                disposedValue = true;
+            }
+        }
+
+        // Override finalizer only if "Dispose(disposing)" has code to free unmanaged resources.
+        ~MachineRepository()
+        {
+            // Do not make this destructor call "Dispose(disposing = false);" to avoid
+            // calling the dispose method twice and throwing an exception.
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            // Dispose of both managed and unmanaged resources.
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public async Task<IEnumerable<Machine>> GetAllMachines()
+        {
+            await EnsureContext();
+            return await _context.Machines.ToListAsync();
+        }
+
+        public async Task<Machine> GetMachineById(int machineId)
+        {
+            await EnsureContext();
+            return await _context.Machines.FindAsync(machineId);
+        }
+
+        private async Task EnsureContext()
+        {
+            if (_context == null ||!_context.IsClosed)
+            {
+                _context = _dbFactory.CreateDbContext();
+            }
+        }
+    }
+
+

@@ -1,0 +1,79 @@
+﻿@page "/addmachine"
+@using Microsoft.AspNetCore.Components.Forms
+@using Resources.Enteties.Models
+@using static Resources.Enteties.Models.MachineState
+@using static Resources.Enteties.Models.LeaseState
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager;
+
+<PageTitle>Add Machine</PageTitle>
+
+@if (!IsSaved)
+{
+    <EditForm Model="Machine" OnValidSubmit="OnSubmit" Enhance FormName="AddMachineForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        
+        <div class="row mb-3">
+            <label for="model" class="col-form-label col-md-1">Model:</label>
+            <div class="col-md-3">
+                <InputText id="model" class="form-control" @bind-Value="Machine.Model" placeholder="Machine model"></InputText>
+                <ValidationMessage For="@(() => Machine.Model)" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="note" class="col-form-label col-md-1">Note:</label>
+            <div class="col-md-3">
+                <InputText id="note" class="form-control" @bind-Value="Machine.Note" placeholder="Any machine notes of interest"></InputText>
+                <ValidationMessage For="@(() => Machine.Note)" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="acquisition" class="col-form-label col-md-1">Acquisition Date:</label>
+            <div class="col-md-3">
+                <InputDate id="acquisition" class="form-control" @bind-Value="Machine.AcquisitionDate" placeholder="Date of Acquisition"></InputDate>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="machineStatus" class="col-form-label col-md-1">Online Status:</label>
+            <div class="col-md-3">
+                <InputRadioGroup id="machineStatus" @bind-Value="Machine.MachineStatus">
+                    @foreach (var state in Enum.GetValues(typeof(MachineState)))
+                    {
+                        var machineState = (MachineState)state;
+                        <InputRadio Value="@machineState" />
+                        @machineState.ToString()<br />
+                    }
+                </InputRadioGroup>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="leaseStatus" class="col-form-label col-md-1">Lease Status:</label>
+            <div class="col-md-8">
+                <InputRadioGroup id="leaseStatus" @bind-Value="Machine.LeaseStatus">
+                    @foreach (var state in Enum.GetValues(typeof(LeaseState)))
+                    {
+                        var leaseState = (LeaseState)state;
+                        <InputRadio Value="@leaseState" />
+                        @leaseState.ToString()<br />
+                    }
+                </InputRadioGroup>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button type="submit" class="btn btn-primary">Add Machine</button>
+            <button type="button" class="btn btn-secondary" @onclick="MachineParkOverview">Back</button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <h4 class="text-success">@Message</h4>
+    <br />
+    <button type="button" class="btn btn-primary ms-1" @onclick="MachineParkOverview">Back</button>
+}

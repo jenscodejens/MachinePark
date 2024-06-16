@@ -1,0 +1,61 @@
+﻿@page "/"
+@page "/machineparkoverview"
+@using Resources.Enteties.Models
+@rendermode InteractiveServer
+
+@attribute [StreamRendering(true)]
+
+<h3>Overview</h3>
+
+@if (Machines == null)
+{
+    <p><em>Fetching data...</em></p>
+}
+else
+{
+    <table class="table table-light">
+        <thead class="table-primary">
+            <tr>
+                <th>Machine ID</th>
+                <th>Model</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th>Acquisition</th>
+                <th>Leased</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var machine in Machines)
+            {
+                <tr>
+                    <td>@machine.MachineId</td>
+                    <td>@machine.Model</td>
+                    <td>@machine.Note</td>
+                    <td>
+                        @if (machine.MachineStatus == MachineState.Online)
+                        {
+                            <div><span class="badge bg-primary text-wrap" style="width: 6rem;">Online</span></div>
+                        }
+                        else if (machine.MachineStatus == MachineState.Offline)
+                        {
+                            <div><span class="badge bg-secondary text-wrap" style="width: 6rem;">Offline</span></div>
+                        }
+                    </td>
+                    <td>@machine.AcquisitionDate.ToString("yyyy-MM-dd")</td>
+                    <td>@(machine.LeaseStatus == LeaseState.Yes? "Yes" 
+                            : machine.LeaseStatus == LeaseState.No? "No" 
+                            : "Other")
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm mb-1" @onclick="@(async () => await UpdateOnlineStatus(machine.MachineId))">Change Status</button>
+                        <a href="@($"machineinfo/{machine.MachineId}")" class="btn btn-primary btn-sm mb-1">Details</a>
+                        <button type="button" class="btn btn-danger btn-sm mb-1" @onclick="@(async () => await DeleteMachine(machine.MachineId))">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>Machines: @MachineStateService.TotalMachines  /  Online: @MachineStateService.OnlineMachines</p>
+}
