@@ -1,10 +1,12 @@
 ﻿@page "/addmachine"
 @using Microsoft.AspNetCore.Components.Forms
 @using Resources.Enteties.Models
+@using Resources.Enteties.State
 @using static Resources.Enteties.Models.MachineState
 @using static Resources.Enteties.Models.LeaseState
 @rendermode InteractiveServer
-@inject NavigationManager NavigationManager;
+@inject MachineStateService MachineStateService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Add Machine</PageTitle>
 
@@ -77,3 +79,4 @@ else
     <br />
     <button type="button" class="btn btn-primary ms-1" @onclick="MachineParkOverview">Back</button>
 }
+<p>Machines: @MachineStateService.TotalMachines  /  Online: @MachineStateService.OnlineMachines</p>

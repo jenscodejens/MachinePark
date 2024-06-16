@@ -64,16 +64,6 @@ namespace Resources.Data.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-        //public async Task<int> GetTotalMachines()
-        //{
-        //    return await _context.Machines.CountAsync();
-        //}
-
-        //public async Task<int> GetOnlineMachines()
-        //{
-        //    return await _context.Machines.CountAsync(m => m.MachineStatus == MachineState.Online);
-        //}
-
     }
 }
 

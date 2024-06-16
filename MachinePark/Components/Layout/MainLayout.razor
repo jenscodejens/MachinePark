@@ -1,7 +1,5 @@
 ﻿@inherits LayoutComponentBase
 @using MachinePark.Components.Layout
-@using Resources.Enteties.State
-@inject MachineStateService MachineStateService
 
 <div class="page">
     <div class="sidebar">
@@ -9,10 +7,10 @@
     </div>
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+               <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
         <article class="content px-4">
-            @Body
+            @Body          
         </article>
     </main>
 </div>

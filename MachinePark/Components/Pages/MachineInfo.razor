@@ -9,8 +9,6 @@
 @inject MachineStateService MachineStateService
 
 
-<PageTitle>Machine Info</PageTitle>
-
 @if (Machine == null)
 {
     <p>Loading...</p>
@@ -26,6 +24,7 @@ else
                 <DataAnnotationsValidator />
                 <ValidationSummary></ValidationSummary>
                 <div class="mb-3">
+                    <h5 class="card-title"><strong>Edit Machine</strong></h5>
                     <label for="model" class="form-label"><strong>Model:</strong></label>
                     <InputText id="model" class="form-control" @bind-Value="@Machine.Model"></InputText>
                     <ValidationMessage class="offset-md-3 col-md-8" For="@(() => Machine.Model)" />
@@ -92,7 +91,7 @@ else
                 }
                 <button type="button" class="btn btn-primary" @onclick="ToggleEditMode">Edit</button>
             </div>
-            <div class="machine-info-container">
+            <div>
                 <p>Machines: @MachineStateService.TotalMachines  /  Online: @MachineStateService.OnlineMachines</p>
             </div>
             }

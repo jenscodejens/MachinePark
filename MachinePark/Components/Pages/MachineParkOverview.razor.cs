@@ -24,8 +24,13 @@ namespace MachinePark.Components.Pages
             }
         }
 
+        /// <summary>
+        /// Checks the current status of the machine and toggle it to the opposite
+        /// </summary>
+        /// <param name="machineId">The <see cref="System.Guid"/> instance of machine currently being used.</param>
+        /// <returns> If not <c>null</c>, toggles the machine status and update the database and MachineStateService with the new value</returns>
         private async Task UpdateOnlineStatus(Guid machineId)
-		{
+		{           
 			var machine = Machines.Find(m => m.MachineId == machineId);
 			if (machine != null)
 			{
@@ -34,7 +39,6 @@ namespace MachinePark.Components.Pages
 
 				await DataService.UpdateOnlineStatus(machine);
                 MachineStateService.SetMachines(Machines);
-                StateHasChanged();
 			}
 		}
 
@@ -43,7 +47,6 @@ namespace MachinePark.Components.Pages
 			await DataService.DeleteMachine(machineId);
 			Machines = (await DataService!.GetAllMachines()).ToList();
             MachineStateService.SetMachines(Machines);
-            StateHasChanged();
         }
     }
 }

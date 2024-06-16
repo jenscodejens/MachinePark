@@ -68,3 +68,6 @@ namespace Resources.Data.Repositories
     }
 
 
+=========================
+MachineSum, read up on renderfragment?
+
