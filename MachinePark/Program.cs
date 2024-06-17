@@ -5,6 +5,7 @@ using Resources.Data.Repositories;
 using Resources.Enteties.IRepositories;
 using Resources.Enteties.Repositories;
 using Resources.Enteties.State;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +39,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 // Slow as hell, look up implementing the Interceptor instead.
-/*using var scope = app.Services.CreateScope();
+using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<MachineDbContext>();
 
 if (await dbContext.Database.CanConnectAsync())
@@ -59,8 +60,8 @@ if (await dbContext.Database.CanConnectAsync())
 }
 else
 {
-    Console.WriteLine("Cannot connect to the database.");
-}*/
+    Debug.WriteLine("Cannot connect to the database.");
+}
 
 await app.RunAsync();
 

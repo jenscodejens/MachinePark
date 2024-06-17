@@ -72,6 +72,7 @@
             <button type="button" class="btn btn-secondary" @onclick="MachineParkOverview">Back</button>
         </div>
     </EditForm>
+    <p>Machines: @MachineStateService.TotalMachines  /  Online: @MachineStateService.OnlineMachines</p>
 }
 else
 {
@@ -79,4 +80,3 @@ else
     <br />
     <button type="button" class="btn btn-primary ms-1" @onclick="MachineParkOverview">Back</button>
 }
-<p>Machines: @MachineStateService.TotalMachines  /  Online: @MachineStateService.OnlineMachines</p>
